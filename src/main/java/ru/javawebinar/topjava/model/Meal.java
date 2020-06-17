@@ -1,31 +1,34 @@
 package ru.javawebinar.topjava.model;
 
+import ru.javawebinar.topjava.web.SecurityUtil;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-public class Meal {
-    private static volatile int count = 0;
+public class Meal extends AbstractBaseEntity {
+    private int userId = SecurityUtil.authUserId();
 
-    private int id;
+    private final LocalDateTime dateTime;
 
-    private LocalDateTime dateTime;
+    private final String description;
 
-    private String description;
+    private final int calories;
 
-    private int calories;
-
-    public Meal() {
-        id = count;
-        count++;
-    }
 
     public Meal(LocalDateTime dateTime, String description, int calories) {
-        id = count;
-        count++;
+        this(null, dateTime, description, calories);
+    }
+
+    public Meal(Integer id, LocalDateTime dateTime, String description, int calories) {
+        super(id);
         this.dateTime = dateTime;
         this.description = description;
         this.calories = calories;
+    }
+
+    public int getUserId() {
+        return userId;
     }
 
     public LocalDateTime getDateTime() {
@@ -40,11 +43,6 @@ public class Meal {
         return calories;
     }
 
-    public int getId() {
-        return id;
-    }
-
-
     public LocalDate getDate() {
         return dateTime.toLocalDate();
     }
@@ -53,16 +51,17 @@ public class Meal {
         return dateTime.toLocalTime();
     }
 
-
-    public void setDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
+    public boolean isNew() {
+        return id == null;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setCalories(int calories) {
-        this.calories = calories;
+    @Override
+     public String toString() {
+        return "Meal{" +
+                "id=" + id +
+                ", dateTime=" + dateTime +
+                ", description='" + description + '\'' +
+                ", calories=" + calories +
+                '}';
     }
 }
