@@ -1,33 +1,18 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://topjava.javawebinar.ru/functions" %>
+<%--<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>--%>
 <html>
 <head>
-    <title>Счетчик каллорий</title>
+    <title>Meal list</title>
     <style>
-        body {
-            font-family: "Helvetica Neue";
-            font-size: 20px;
+        .normal {
+            color: green;
         }
-        table {
-            border: 0px;
-            width: 100%;
-        }
-        tr, td {
-            height: 40px;
-            font-size: 20px;
-        }
-        tr:nth-child(odd) {
-            background-color: #DCDCDC;
-        }
-        button {
-            font-size: 20px;
-            background-color: #87CEFA;
-            border-radius: 5px;
-            border: 5px;
-            height: 30px;
-        }
-        a {
-            text-decoration: none;
+
+        .excess {
+            color: red;
         }
     </style>
 </head>
@@ -56,7 +41,13 @@
             </c:forEach>
         </tbody>
     </table>
-    <p></p>
-    <div align="center"><button><a href="meals?action=add">Добавить</a></button></div>
+    <form method="get" action="meals">
+        <p>Time from: <input type="time" id="timeFrom" name="timeFrom" value="<c:out value="${timeFrom}"/>"></p>
+        <p>Time to: <input type="time" id="timeTo" name="timeTo" value="<c:out value="${timeTo}"/>"></p>
+        <p>Date from: <input type="date" id="dateFrom" name="dateFrom" value="<c:out value="${dateFrom}"/>"></p>
+        <p>Date to: <input type="date" id="dateTo" name="dateTo" value="<c:out value="${dateTo}"/>"></p>
+        <button type="">Apply</button>
+    </form>
+</section>
 </body>
 </html>
