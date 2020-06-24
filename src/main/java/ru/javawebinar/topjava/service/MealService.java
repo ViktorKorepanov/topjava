@@ -1,15 +1,19 @@
 package ru.javawebinar.topjava.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import ru.javawebinar.topjava.model.Meal;
+import org.springframework.beans.factory.annotation.Autowired;
 import ru.javawebinar.topjava.repository.MealRepository;
-
+import java.time.LocalDate;
 import java.util.List;
+
+import static ru.javawebinar.topjava.util.DateTimeUtil.atStartOfDayOrMin;
+import static ru.javawebinar.topjava.util.DateTimeUtil.atStartOfNextDayOrMax;
+import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
 
 @Service
 public class MealService {
-
     private final MealRepository repository;
 
     @Autowired
@@ -24,12 +28,12 @@ public class MealService {
 
     // редактирование блюда
     public void update(Meal meal, int userId) {
-        repository.save(meal, userId);
+        checkNotFoundWithId(repository.save(meal, userId), meal.getId());
     }
 
     // удаление блюда
     public void delete(int id, int userId) {
-        repository.delete(id, userId);
+        checkNotFoundWithId(repository.delete(id, userId), id);
     }
 
     // получение блюда
@@ -40,5 +44,9 @@ public class MealService {
     // получение всех блюд
     public List<Meal> getAll(int userId) {
         return repository.getAll(userId);
+    }
+
+    public List<Meal> getBetweenInclusive(@Nullable LocalDate startDate, @Nullable LocalDate endDate, int userId) {
+        return repository.getBetweenHalfOpen(atStartOfDayOrMin(startDate), atStartOfNextDayOrMax(endDate), userId);
     }
 }

@@ -3,26 +3,26 @@ package ru.javawebinar.topjava.web.meal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.util.MealsUtil;
+import ru.javawebinar.topjava.web.SecurityUtil;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
-import static ru.javawebinar.topjava.util.MealsUtil.getFilteredTos;
-import static ru.javawebinar.topjava.util.MealsUtil.getTos;
-import static ru.javawebinar.topjava.web.SecurityUtil.authUserId;
+import static ru.javawebinar.topjava.util.ValidationUtil.assureIdConsistent;
+import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
 
 @Controller
 public class MealRestController {
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    private MealService service;
+    private final MealService service;
 
     @Autowired
     public MealRestController(MealService service) {
@@ -30,56 +30,47 @@ public class MealRestController {
     }
 
     // получение всех блюд
-    public List<Meal> getAll() {
-        log.info("getAllMeals");
-        return service.getAll(authUserId());
-    }
-
-    // получение всех блюд с excess
-    public List<MealTo> getAllExcess() {
-        log.info("getAllMeals with excess");
-        return getTos(getAll(), MealsUtil.DEFAULT_CALORIES_PER_DAY);
-    }
-
-    // фильтрация по времени
-    public List<MealTo> getAllExcessFiltered(LocalTime timeFrom, LocalTime timeTo) {
-        log.info("getAllMeals with excess filtered by time");
-        return getFilteredTos(getAll(), MealsUtil.DEFAULT_CALORIES_PER_DAY, timeFrom, timeTo);
-    }
-
-    // фильтрация по дате
-    public List<MealTo> getAllExcessFiltered(LocalDate dateFrom, LocalDate dateTo) {
-        log.info("getAllMeals with excess filtered by date");
-        return getFilteredTos(getAll(), MealsUtil.DEFAULT_CALORIES_PER_DAY, dateFrom, dateTo);
-    }
-
-    // фильтрация по дате и времени
-    public List<MealTo> getAllExcessFiltered(LocalDate dateFrom, LocalDate dateTo, LocalTime timeFrom, LocalTime timeTo) {
-        log.info("getAllMeals with excess filtered by date");
-        return getFilteredTos(getAll(), MealsUtil.DEFAULT_CALORIES_PER_DAY, dateFrom, dateTo, timeFrom, timeTo);
+    public List<MealTo> getAll() {
+        int userId = SecurityUtil.authUserId();
+        log.info("getAll for user {}", userId);
+        return MealsUtil.getTos(service.getAll(userId), SecurityUtil.authUserCaloriesPerDay());
     }
 
     // получение блюда
     public Meal get(int id) {
-        log.info("get meal id {}", id);
-        return service.get(id, authUserId());
+        int userId = SecurityUtil.authUserId();
+        log.info("get meal {} for user {}", id, userId);
+        return service.get(id, userId);
     }
 
     // создание блюда
     public Meal create(Meal meal) {
-        log.info("create meal {}", meal);
-        return service.create(meal, authUserId());
+        int userId = SecurityUtil.authUserId();
+        checkNew(meal);
+        log.info("create {} for user {}", meal, userId);
+        return service.create(meal, userId);
     }
 
     // редактирование блюда
-    public void update(Meal meal) {
-        log.info("update meal {}", meal);
-        service.update(meal, authUserId());
+    public void update(Meal meal, int id) {
+        int userId = SecurityUtil.authUserId();
+        assureIdConsistent(meal, id);
+        log.info("update {} for user {}", meal, userId);
+        service.update(meal, userId);
     }
 
     // удаление блюда
     public void delete(int id) {
-        log.info("delete meal id {}", id);
-        service.delete(id, authUserId());
+        int userId = SecurityUtil.authUserId();
+        log.info("delete meal {} for user {}", id, userId);
+        service.delete(id, userId);
+    }
+
+    public List<MealTo> getBetween(@Nullable LocalDate startDate, @Nullable LocalTime startTime,
+                                   @Nullable LocalDate endDate, @Nullable LocalTime endTime) {
+        int userId = SecurityUtil.authUserId();
+        log.info("getBetween dates({} - {}) time({} - {}) for user {}", startDate, endDate, startTime, endTime, userId);
+        List<Meal> mealsDateFiltered = service.getBetweenInclusive(startDate, endDate, userId);
+        return MealsUtil.getFilteredTos(mealsDateFiltered, SecurityUtil.authUserCaloriesPerDay(), startTime, endTime);
     }
 }

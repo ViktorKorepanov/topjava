@@ -49,13 +49,13 @@
             </tr>
         </c:forEach>
     </table>
-    <form method="get" action="meals">
-        <p>Time from: <input type="time" id="timeFrom" name="timeFrom" value="<c:out value="${timeFrom}"/>"></p>
-        <p>Time to: <input type="time" id="timeTo" name="timeTo" value="<c:out value="${timeTo}"/>"></p>
-        <p>Date from: <input type="date" id="dateFrom" name="dateFrom" value="<c:out value="${dateFrom}"/>"></p>
-        <p>Date to: <input type="date" id="dateTo" name="dateTo" value="<c:out value="${dateTo}"/>"></p>
-        <button type="">Apply</button>
-    </form>
+<%--    <form method="get" action="meals">--%>
+<%--        <p>Time from: <input type="time" id="timeFrom" name="timeFrom" value="<c:out value="${timeFrom}"/>"></p>--%>
+<%--        <p>Time to: <input type="time" id="timeTo" name="timeTo" value="<c:out value="${timeTo}"/>"></p>--%>
+<%--        <p>Date from: <input type="date" id="dateFrom" name="dateFrom" value="<c:out value="${dateFrom}"/>"></p>--%>
+<%--        <p>Date to: <input type="date" id="dateTo" name="dateTo" value="<c:out value="${dateTo}"/>"></p>--%>
+<%--        <button type="">Apply</button>--%>
+<%--    </form>--%>
 </section>
 </body>
 </html>
