@@ -44,7 +44,7 @@ public class UserServiceTest {
     public void create() throws Exception {
         User newUser = getNew();
         User created = service.create(newUser);
-        Integer newId = created.getId();
+        int newId = created.id();
         newUser.setId(newId);
         assertMatch(created, newUser);
         assertMatch(service.get(newId), newUser);

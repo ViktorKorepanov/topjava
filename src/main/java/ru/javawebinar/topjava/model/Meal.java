@@ -6,13 +6,18 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+@Entity
+@Table(name = "meals")
 public class Meal extends AbstractBaseEntity {
-//    private final int userId = SecurityUtil.authUserId();
 
+    @Column(name = "date_time", nullable = false)
     private LocalDateTime dateTime;
 
+    @Column(name = "description", nullable = false)
+    @NotBlank
     private String description;
 
+    @Column(name = "calories", nullable = false)
     private int calories;
 
     public Meal() {
@@ -32,10 +37,6 @@ public class Meal extends AbstractBaseEntity {
         this.description = description;
         this.calories = calories;
     }
-
-//    public int getUserId() {
-//        return userId;
-//    }
 
     public LocalDateTime getDateTime() {
         return dateTime;
