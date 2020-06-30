@@ -9,6 +9,9 @@ public class SecurityUtil {
 
 
 
+    private SecurityUtil() {
+    }
+
     public static int authUserId() {
         return id;
     }
