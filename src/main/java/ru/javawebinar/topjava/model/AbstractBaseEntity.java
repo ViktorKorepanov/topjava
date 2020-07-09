@@ -2,6 +2,8 @@ package ru.javawebinar.topjava.model;
 
 import org.springframework.util.Assert;
 
+import org.springframework.data.domain.Persistable;
+
 import javax.persistence.*;
 
 @MappedSuperclass
