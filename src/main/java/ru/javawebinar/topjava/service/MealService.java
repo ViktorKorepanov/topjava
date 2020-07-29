@@ -6,6 +6,9 @@ import org.springframework.util.Assert;
 import ru.javawebinar.topjava.model.Meal;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.javawebinar.topjava.repository.MealRepository;
+import ru.javawebinar.topjava.repository.datajpa.CrudMealRepository;
+import ru.javawebinar.topjava.repository.datajpa.CrudUserRepository;
+
 import java.time.LocalDate;
 import java.util.List;
 
